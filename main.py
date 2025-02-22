@@ -1,7 +1,7 @@
 import logging
 import wikipediaapi
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # Bot tokenini shu yerga kiriting
 TOKEN = "7893860405:AAFq_Pl2vwwvbpib27tXEjgIWHnVuJEhUGU"
@@ -9,12 +9,10 @@ TOKEN = "7893860405:AAFq_Pl2vwwvbpib27tXEjgIWHnVuJEhUGU"
 # Logging sozlamalari
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-
-async def start(update: Update, context: CallbackContext) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text("Salom! Men Wikipedia botman. Savolingizni yozing!")
 
-
-async def chatbot_response(update: Update, context: CallbackContext) -> None:
+async def chatbot_response(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_input = update.message.text.lower()
     responses = {
         "salom": "Salom! Qanday yordam bera olaman?",
@@ -34,18 +32,13 @@ async def chatbot_response(update: Update, context: CallbackContext) -> None:
         else:
             await update.message.reply_text("Kechirasiz, bu mavzuda ma'lumot topa olmadim. Boshqa savol bering!")
 
-
-async def main():
+def main():
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chatbot_response))
 
     print("Bot ishga tushdi...")
-    await app.run_polling()
-
+    app.run_polling()  # Asinxron bo‘lmagan holda ishlaydi va bot to‘xtab qolmaydi
 
 if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
-
+    main()
