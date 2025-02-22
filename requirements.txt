@@ -1,0 +1,6 @@
+@echo off
+python-telegram-bot
+requests
+wikipedia-api
+flask
+
